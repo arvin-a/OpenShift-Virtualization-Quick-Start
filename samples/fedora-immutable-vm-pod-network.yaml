@@ -1,0 +1,58 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: fedora1
+  namespace: vm-project
+  labels:
+    app: fedora1
+spec:
+  running: true
+  template:
+    spec:
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - bootOrder: 1
+              disk:
+                bus: virtio
+              name: rootdisk
+            - bootOrder: 4
+              disk:
+                bus: virtio
+              name: cloudinitdisk
+          interfaces:
+            - bootOrder: 2
+              masquerade: {}
+              model: virtio
+              name: nic0
+          networkInterfaceMultiqueue: true
+          rng: {}
+        machine:
+          type: pc-q35-rhel8.1.0
+        resources:
+          requests:
+            memory: 4Gi
+      evictionStrategy: LiveMigrate
+      hostname: fedora1
+      networks:
+        - name: nic0
+          pod: {}
+      terminationGracePeriodSeconds: 0
+      volumes:
+        - containerDisk:
+            image: 'MyRegistry:5000/fedora:32.1.6'
+          name: rootdisk
+        - cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              ssh_pwauth: True
+              chpasswd:
+                list: |
+                   root:password
+                expire: False
+              hostname: fedora1
+          name: cloudinitdisk

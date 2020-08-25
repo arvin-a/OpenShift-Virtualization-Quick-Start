@@ -1,0 +1,77 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: fedora2
+  namespace: vm-project
+  labels:
+    app: fedora2
+spec:
+  dataVolumeTemplates:
+    - apiVersion: cdi.kubevirt.io/v1alpha1
+      kind: DataVolume
+      metadata:
+        name: fedora2-disk-0
+      spec:
+        pvc:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 120G
+          storageClassName: local-storage
+          volumeName: fedora2-pv
+          volumeMode: Filesystem
+        source:
+          pvc:
+            name: fedora-32-dv
+            namespace: vm-project
+  running: true
+  template:
+    metadata:
+    spec:
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - bootOrder: 1
+              disk:
+                bus: virtio
+              name: disk-0
+            - disk:
+                bus: virtio
+              name: cloudinitdisk
+          interfaces:
+            - bootOrder: 2
+              masquerade: {}
+              model: virtio
+              name: nic0
+          networkInterfaceMultiqueue: true
+          rng: {}
+        machine:
+          type: pc-q35-rhel8.2.0
+        resources:
+          requests:
+            memory: 4Gi
+      evictionStrategy: LiveMigrate
+      hostname: fedora2
+      networks:
+        - name: nic0
+          pod: {}
+      terminationGracePeriodSeconds: 0
+      volumes:
+        - dataVolume:
+            name: fedora2-disk-0
+          name: disk-0
+        - cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              ssh_pwauth: True
+              chpasswd:
+                list: |
+                   root:password
+                expire: False
+              hostname: fedora1
+          name: cloudinitdisk
