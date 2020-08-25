@@ -2,6 +2,20 @@
 
 This is a quick start guide to get you started with OCP-V.
 
+- [OpenShift Virtualization Quick-Start](#openshift-virtualization-quick-start)
+  * [Installation](#installation)
+    + [Online Clusters](#online-clusters)
+    + [Disconnected Clusters](#disconnected-clusters)
+  * [Getting your VM image into OCP-V](#getting-your-vm-image-into-ocp-v)
+    + [Import image to a registry](#import-image-to-a-registry)
+    + [Import image to a DataVolume](#import-image-to-a-datavolume)
+  * [Deploy VM using a registry image](#deploy-vm-using-a-registry-image)
+  * [Deploy VM using a cloned Data Volume](#deploy-vm-using-a-cloned-data-volume)
+  * [Network Configuration using Nmstate](#network-configuration-using-nmstate)
+    + [Cloud Init](#cloud-init)
+    + [Notes](#notes)
+
+
 ## Installation
 
 OpenShift Virtualization is installed via OperatorHub. To install OpenShift Virtualization you will need to have cluster admin permissions.
