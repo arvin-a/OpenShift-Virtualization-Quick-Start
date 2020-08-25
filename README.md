@@ -8,18 +8,17 @@ OpenShift Virtualization is installed via OperatorHub. To install OpenShift Virt
 
 ### Online Clusters
 
-For clusters that have internet connection with unrestricted access to quay.io and registry.redhat.io follow the standard installation guide at https://docs.openshift.com/container-platform/4.5/virt/install/installing-virt-web.html#virt-subscribing-to-the-catalog_installing-virt-web
+For clusters that have internet connection with unrestricted access to quay.io and registry.redhat.io follow the [standard installation guide](https://docs.openshift.com/container-platform/4.5/virt/install/installing-virt-web.html#virt-subscribing-to-the-catalog_installing-virt-web)
 
 ### Disconnected Clusters
 
 For both disconnected clusters and clusters with a registry proxy, you will need create a catalog source. For disconnected clusters you will need to mirror the related images to your local registry as well. There are two ways to do this.
 
-The first is  using the instructions at https://docs.openshift.com/container-platform/4.5/operators/olm-restricted-networks.html. The limitation of this method is that you have to mirror the entire catalogue which can take anywhere between 1 to 5 hours and take up 20-30gb space. Most of the operators in the catalogue cannot be used in disconnected clusters so its not an ideal solution.
+The first is using [OCP docs for catalog creation and mirroring](https://docs.openshift.com/container-platform/4.5/operators/olm-restricted-networks.html). The limitation of this method is that you have to mirror the entire catalogue which can take anywhere between 1 to 5 hours and take up 20-30gb space. Most of the operators in the catalogue cannot be used in disconnected clusters so its not an ideal solution.
 
-The second method is using the tool at https://github.com/arvin-a/openshift-disconnected-operators. This tool will let you create a custom catalogue with only the operators you want. Full instructions are provided in the repo.
+The second method is using [the custom catalog creation tool](https://github.com/arvin-a/openshift-disconnected-operators). This tool will let you create a custom catalogue with only the operators you want. Full instructions are provided in the repo.
 
-Once the catalogue is up navigate to OperatorHub and install OpenShift Virtualization using the standard instructions at https://docs.openshift.com/container-platform/4.5/virt/install/installing-virt-web.html#virt-subscribing-to-the-catalog_installing-virt-web
-
+Once the catalogue is up navigate to OperatorHub and install OpenShift Virtualization [using the standard instructions](https://docs.openshift.com/container-platform/4.5/virt/install/installing-virt-web).
 
 ## Getting your VM image into OCP-V
 
@@ -49,8 +48,7 @@ The fedora image is now available to be pulled through your registry. This will 
 
 You can use the virtctl cli tool to import qcow images to a data volume.
 
-You can either follow the instructions on this page 
-https://docs.openshift.com/container-platform/4.5/virt/install/virt-installing-virtctl.html or get the newest version from here https://github.com/kubevirt/kubevirt/releases
+You can install virtctl via the instruction in [the OCP docs](https://docs.openshift.com/container-platform/4.5/virt/install/) or get the latest version from [the project's GitHub site](https://github.com/kubevirt/kubevirt/releases).
 
 This method requires a Storage Class to be setup so we can provision Persistent Volumes. If your Storage Class requires manual provisioning of PVs, create a PV with a storage size of 20GB.
 
@@ -60,14 +58,13 @@ Run the following command to upload the image to a Data Volume managed Persisten
 oc new-project vm-project
 oc project vm-project
 virtctl image-upload dv fedora-32-dv --size=20G --storage-class=local-storage --image-path=vm-images/Fedora-Cloud-Base-32-1.6.x86_64.qcow2
-
 ```
 
 Once complete a Data Volume with the qcow image will be ready for use by a VM.
 
 ## Deploy VM using a registry image
 
-If you want to create immutable VMs that have ephemeral or persistent storage, creating VMs from registry image is the easiest way to achieve this. Earlier we created registry image using the Fedora qcow. Use the sample yaml [fedora-immutable-vm-pod-network.yaml](https://example.com/) from this repo to create your fedora immutable VM.
+If you want to create immutable VMs that have ephemeral or persistent storage, creating VMs from registry image is the easiest way to achieve this. Earlier we created registry image using the Fedora qcow. Use the sample yaml [fedora-immutable-vm-pod-network.yaml](https://github.com/arvin-a/OpenShift-Virtualization-Quick-Start/blob/master/samples/fedora-immutable-vm-pod-network.yaml) from this repo to create your fedora immutable VM.
 
 Relevant section
 
@@ -80,7 +77,7 @@ Relevant section
 
 ## Deploy VM using a cloned Data Volume
 
-It's equally easy to to create a traditional VM with persistent storage. Earlier we used virtctl cli to create a data volume from the Fedora qcow image. We can now use that data volume as the source of the clone for our VM instance. See the sample yaml  [fedora-vm-pod-network.yaml ](https://example.com/)
+It's equally easy to to create a traditional VM with persistent storage. Earlier we used virtctl cli to create a data volume from the Fedora qcow image. We can now use that data volume as the source of the clone for our VM instance. See the sample yaml  [fedora-vm-pod-network.yaml ](https://github.com/arvin-a/OpenShift-Virtualization-Quick-Start/blob/master/samples/fedora-immutable-vm-pod-network.yaml)
 
 Relevant section.
 
@@ -221,3 +218,8 @@ This data can be hard coded like the example above or you can create a secret wi
               name: vminit
           name: cloudinitdisk
 ```
+
+
+### Notes
+
+This document is a work in progress.
