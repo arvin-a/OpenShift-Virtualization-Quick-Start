@@ -25,17 +25,17 @@ For clusters that have internet connection with unrestricted access to quay.io a
 
 ### Disconnected Clusters
 
-For both disconnected clusters and clusters with a registry proxy, you will need create a catalog source. For disconnected clusters you will need to mirror the related images to your local registry as well. There are two ways to do this.
+For both disconnected clusters and clusters with a registry proxy, you will need to create a catalog source. For disconnected clusters you will need to mirror the related images to your local registry as well. There are two ways to do this.
 
-The first is using [OCP docs for catalog creation and mirroring](https://docs.openshift.com/container-platform/4.5/operators/olm-restricted-networks.html). The limitation of this method is that you have to mirror the entire catalogue which can take anywhere between 1 to 5 hours and take up 20-30gb space. Most of the operators in the catalogue cannot be used in disconnected clusters so its not an ideal solution.
+The first is using [OCP docs for catalog creation and mirroring](https://docs.openshift.com/container-platform/4.5/operators/olm-restricted-networks.html). The limitation of this method is that you have to mirror the entire catalogue which can take anywhere between 1 to 5 hours and take up 20-30gb space. Most of the operators in the catalogue cannot be used in disconnected clusters so its not an ideal solution for fully disconnected clusters.
 
 The second method is using [the custom catalog creation tool](https://github.com/arvin-a/openshift-disconnected-operators). This tool will let you create a custom catalogue with only the operators you want. Full instructions are provided in the repo.
 
-Once the catalogue is up navigate to OperatorHub and install OpenShift Virtualization [using the standard instructions](https://docs.openshift.com/container-platform/4.5/virt/install/installing-virt-web).
+Once the catalogue is up, navigate to OperatorHub and install OpenShift Virtualization [using the standard instructions](https://docs.openshift.com/container-platform/4.5/virt/install/installing-virt-web).
 
 ## Getting your VM image into OCP-V
 
-OCP-V supports importing of QCOW2 and RAW images. For the purposes of this guide we can use the Fedora qcow2 image found here https://alt.fedoraproject.org/cloud/.  
+OCP-V supports importing of QCOW2 and RAW images. For the purposes of this guide we use the Fedora qcow2 image found here https://alt.fedoraproject.org/cloud/.  
 
 Here are two ways to import images to OCP-V.
 
@@ -119,8 +119,7 @@ Relevant section.
 
 ## Network Configuration using Nmstate
 
-Each VM is controlled via a virt-launcher pod that is created with each VM.
-The default networking type for OCP-V VMs is Masquerade. The VM will be assigned a none routable IP and you will access the VM using the IP of the virt-launcher pod that was deployed alongside it.
+Each VM is controlled via a virt-launcher pod that is created with each VM. The default networking type for OCP-V VMs is Masquerade. The VM will be assigned a none routable IP and you will access the VM using the IP of the virt-launcher pod that was deployed alongside it.
 
 ``` yaml
           interfaces:
@@ -129,7 +128,7 @@ The default networking type for OCP-V VMs is Masquerade. The VM will be assigned
               name: nic0
 ```
 
-You can also connect to the host network by creating a bridge using Nmstate. Nmstate operator is installed with OVP-V and you can use NodeNetworkConfigurationPolicy (NNCP) object to update the host network settings.
+You can also connect to the host network by creating a bridge using Nmstate. Nmstate operator is installed with OVP-V and you can use NodeNetworkConfigurationPolicy(NNCP) object to update the host network settings.
 
 Here is a sample config to create a bridge called br1 from an interface called eth1.
 
